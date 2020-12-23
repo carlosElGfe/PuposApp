@@ -2,7 +2,7 @@ from flask import Flask, redirect, url_for, render_template, Response,jsonify,cu
 from flask_cors import CORS, cross_origin 
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
-
+import os
 import json
 import io
 from api_utils import *
@@ -14,21 +14,27 @@ CORS(app)
 @cross_origin()
 def search():
     if request.method == 'GET':
-        df = parse_excel('buffer.xlsx')
+        df = parse_excel('static/buffer.xlsx')
         #print(df.columns)
         data = get_count(df)
         return render_template(
             "base.html",data=data
             )
     elif request.method == 'POST':
-        filename = request.files['file'].content_length
-        print(filename)
+        file = request.files['exc']
+        file_path = os.path.join("static","buffer.xlsx")
+        file.save(file_path)
+        #print(df.columns)
+        #data = get_count(df)
+        #return render_template(
+        #    "base.html",data=data
+        #    )
+        df = parse_excel('static/buffer.xlsx')
         #print(df.columns)
         data = get_count(df)
         return render_template(
             "base.html",data=data
             )
-
 
 
 if __name__ == '__main__':
