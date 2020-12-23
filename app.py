@@ -14,12 +14,18 @@ CORS(app)
 @cross_origin()
 def search():
     if request.method == 'GET':
-        df = parse_excel('static/buffer.xlsx')
-        #print(df.columns)
-        data = get_count(df)
-        return render_template(
-            "base.html",data=data
-            )
+        try:
+            df = parse_excel('static/buffer.xlsx')
+            #print(df.columns)
+            data = get_count(df)
+            return render_template(
+                "base.html",data=data
+                )
+        except Exception:
+            data = []
+            return render_template(
+                "base.html",data=data
+                )
     elif request.method == 'POST':
         file = request.files['exc']
         ext = file.filename.split(".")
