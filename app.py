@@ -22,19 +22,22 @@ def search():
             )
     elif request.method == 'POST':
         file = request.files['exc']
-        file_path = os.path.join("static","buffer.xlsx")
-        file.save(file_path)
-        #print(df.columns)
-        #data = get_count(df)
-        #return render_template(
-        #    "base.html",data=data
-        #    )
-        df = parse_excel('static/buffer.xlsx')
-        #print(df.columns)
-        data = get_count(df)
-        return render_template(
-            "base.html",data=data
-            )
+        ext = file.filename.split(".")
+        if ext == "xlsx" or ext == "xls": 
+            file_path = os.path.join("static","buffer.xlsx")
+            file.save(file_path)
+            #print(df.columns)
+            #data = get_count(df)
+            #return render_template(
+            #    "base.html",data=data
+            #    )
+            df = parse_excel('static/buffer.xlsx')
+            #print(df.columns)
+            data = get_count(df)
+            return render_template(
+                "base.html",data=data
+                )
+        return "Extension no valida"
 
 
 if __name__ == '__main__':

@@ -14,11 +14,11 @@ def parse_excel(path):
 
 
 def get_count(df):
+    out = []
     try:
         buffer = df['Codigo_Producto'].value_counts()
         buffer2 = buffer.index
         buffer = buffer.to_list()
-        out = []
         for i in buffer:
             ind = buffer.index(i)
             tuplee = []
@@ -27,5 +27,9 @@ def get_count(df):
             out.append(tuplee)
         print(out)
         return out
+    except KeyError:
+        out="error de excel, columna Codigo_Producto no encontrada"
+        return out
     finally:
+        del out 
         pass
