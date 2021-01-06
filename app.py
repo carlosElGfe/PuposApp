@@ -1,12 +1,9 @@
-from flask import Flask, redirect, url_for, render_template, Response,jsonify,current_app,render_template_string,request
+from flask import Flask, redirect, url_for, render_template, Response,jsonify,current_app,render_template_string, request
 from flask_cors import CORS, cross_origin 
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import  FileStorage
-import os
 import json
 import io
 from api_utils import *
-import openpyxl
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -14,37 +11,25 @@ CORS(app)
 @cross_origin()
 def search():
     if request.method == 'GET':
-        try:
-            df = parse_excel('static/buffer.xlsx')
-            #print(df.columns)
-            data = get_count(df)
-            return render_template(
-                "base.html",data=data
-                )
-        except Exception:
-            data = []
-            return render_template(
-                "base.html",data=data
-                )
+        df = parse_excel('buffer.xlsx')
+        #print(df.columns)
+        data = get_count(df)
+        return render_template(
+            "base.html",data=data
+            )
     elif request.method == 'POST':
-        file = request.files['exc']
-        ext = file.filename.split(".")
-        if ext == "xlsx" or ext == "xls": 
-            file_path = os.path.join("static","buffer.xlsx")
-            file.save(file_path)
-            #print(df.columns)
-            #data = get_count(df)
-            #return render_template(
-            #    "base.html",data=data
-            #    )
-            df = parse_excel('static/buffer.xlsx')
+        file = request.files.get('file').read()
+        print(type(file))
+        print(file)
+        #data = get_count(df)
+        if file and allowed_file(file.filename):
+            df = parse_excel('buffer.xlsx')
             #print(df.columns)
             data = get_count(df)
             return render_template(
                 "base.html",data=data
                 )
-        return "Extension no valida"
-
+    return "Hello Wolrd"
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0")
